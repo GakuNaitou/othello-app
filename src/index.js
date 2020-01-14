@@ -4,27 +4,55 @@ import './index.css';
 import * as serviceWorker from './serviceWorker';
 
 class Square extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: null,
+    };
+  }
+
   render() {
     return (
-      <button className="square">
-
+      <button className="square" onClick={() => this.props.onClick()}>
+        {this.props.value}
       </button>
     );
   }
 }
 
 class Board extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      squares: Array(64).fill(null),
+      blackIsNext: true,
+    };
+  }
+
+  handleClick(i) {
+    const squares = this.state.squares.slice();
+    squares[i] = this.state.blackIsNext ? '●' : '○';
+    this.setState({
+      squares: squares,
+      blackIsNext: !this.state.blackIsNext,
+    });
+  }
+
   renderSquare(i) {
-    return <Square />;
+    return (
+      <Square
+        value={this.state.squares[i]}
+        onClick={() => this.handleClick(i)}
+      />
+    );
   }
 
   render() {
-    const status = 'Next player: X';
-    const squares = [];
+    const status = 'Next player: ' + (this.state.blackIsNext ? 'X' : 'O');
 
     return (
       <div>
-        {}
+        <div className="status">{status}</div>
         <div className="board-row">
           {this.renderSquare(0)}
           {this.renderSquare(1)}
